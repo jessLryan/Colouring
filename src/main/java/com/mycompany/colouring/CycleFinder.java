@@ -5,61 +5,102 @@
  */
 package com.mycompany.colouring;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
+import java.util.Arrays;
+import java.util.HashSet;
+import org.jgrapht.Graph;
 
 /**
  *
  * @author jessica
  */
 public class CycleFinder {
+
     public static void main(String[] args) {
-        int n = Integer.parseInt(args[0]);
-        
-         List<int[][]> adjMatrices = allValidMatrices(n);
-//         for (int[][] matrix:adjMatrices) {
-//             System.out.println("matrix");
-//             for (int[] row : matrix) {
-//                 System.out.println();
-//                 for (int i=0;i<row.length;i++) {
-//                     System.out.print(row[i]+" ");
-//                 }
-//             }
-//             System.out.println();
-//         }
-     }
-    
-    public static List<int[][]> allValidMatrices(int n) {
-        List<int[][]> validMatrices = new ArrayList<int[][]>();
-        List<ArrayList<Integer>> total = new ArrayList<ArrayList<Integer>>();
-        ArrayList<Integer> soFar = new ArrayList<Integer>();
-        allCombos(total,soFar, n);
-        for (ArrayList<Integer> colours : total) {
-            int[][] matrix = new int[n][n];
-            int rowNo = 0;
-            for (int i=0;i<n-i;i+=n) {
-                int[] row = colours.subList(i, i+n).stream().mapToInt(j -> j).toArray();
-                matrix[rowNo] = row;
+        int n = 3;
+        int[][] matrix = new int[n][n];
+
+//JohnsonSimpleCycles​(Graph<V,​E> graph)
+        int row = 0;
+        int column = 0;
+        while (row < n) {
+            if (matrix[row][column] < n) {
+                matrix[row][column]++;
+
+                if (row > 0) {
+                    for (int i = 0; i < row; i++) {
+                        Arrays.fill(matrix[i], 0);
+                    }
+                }
+                if (column > 0) {
+                    for (int j = 0; j < column; j++) {
+                        matrix[row][j] = 0;
+                    }
+
+                }
+                row = 0;
+                column = 0;
+//                    times++;
+                if (checkMatrixValid(matrix)) {
+//                    System.out.println("matrix");
+//                    for (int i = 0; i < n; i++) {
+//                        for (int j = 0; j < n; j++) {
+//                            System.out.print(matrix[i][j] + " ");
+//                        }
+//                        System.out.println();
+//                    }
+                }
+
+            } else {
+                if (column < n - 1) {
+                    column++;
+                } else {
+                    row++;
+                    column = 0;
+                }
             }
-            if (checkMatrixValid(matrix)) {
-                validMatrices.add(matrix);
-            }
+//            System.out.println("times "+times);
+            //System.out.println("exited while loop");
+
         }
-        return validMatrices;
+
     }
-    
+
     public static boolean checkMatrixValid(int[][] matrix) {
         for (int[] row : matrix) {
-            Set mySet = Set.of(row);
-            if (mySet.size()>2) {
+            Set<Integer> set = new HashSet<>();
+
+            // Iterate through the array 
+            for (int t : row) {
+                // Add each element into the set 
+                set.add(t);
+            }
+
+            if (set.size() > 2) {
+
                 return false;
+            } else {
+//                System.out.println("row ");
+//                for (int i=0;i<row.length;i++) {
+//                    System.out.print(row[i]+" ");
+//                }
+//                System.out.println("set ");
+//                for (int j:set) {
+//                    System.out.print(j+" ");
+//                }
+
             }
         }
-        for (int i=0;i< matrix.length;i++) {
-            int[] column = getColumn(matrix,i);
-            Set mySet = Set.of(column);
-            if (mySet.size()>2) {
+        for (int i = 0; i < matrix.length; i++) {
+            int[] column = getColumn(matrix, i);
+            Set<Integer> set = new HashSet<>();
+
+            // Iterate through the array 
+            for (int t : column) {
+                // Add each element into the set 
+                set.add(t);
+            }
+            if (set.size() > 2) {
                 return false;
             }
         }
@@ -73,17 +114,5 @@ public class CycleFinder {
         }
         return column;
     }
-    
-    public static void allCombos(List<ArrayList<Integer>> total, ArrayList<Integer> soFar, int n) {
-        for (int i = 0; i < n + 1; i++) {
-            ArrayList<Integer> newSoFar = (ArrayList<Integer>) soFar.clone();
-            newSoFar.add(i);
-            if (newSoFar.size() == (n * n)) {
-                total.add(newSoFar);
-            } else {
-                allCombos(total, newSoFar, n);
-            }
-        }
-    }
-    
+
 }
