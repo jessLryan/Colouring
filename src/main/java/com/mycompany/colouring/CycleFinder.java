@@ -8,7 +8,7 @@ package com.mycompany.colouring;
 import java.util.Set;
 import java.util.Arrays;
 import java.util.HashSet;
-import org.jgrapht.Graph;
+import org.jgrapht.alg.cycle;
 
 /**
  *
@@ -19,8 +19,6 @@ public class CycleFinder {
     public static void main(String[] args) {
         int n = 3;
         int[][] matrix = new int[n][n];
-
-//JohnsonSimpleCycles​(Graph<V,​E> graph)
         int row = 0;
         int column = 0;
         while (row < n) {
